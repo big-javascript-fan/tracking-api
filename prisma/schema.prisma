@@ -1,0 +1,24 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["selectRelationCount", "filterJson", "orderByRelation"]
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model tracking {
+  id            BigInt          @id @default(autoincrement())
+  ipAddress     String          @db.VarChar(255) @unique
+  tag           String          @default("")
+  count         Int             @default(0)
+  createdAt     DateTime        @db.Timestamp() @default(now())
+  updatedAt     DateTime
+
+  @@index([ipAddress], name: "index_ip_address")
+}
