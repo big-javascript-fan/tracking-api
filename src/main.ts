@@ -11,31 +11,9 @@ async function bootstrap(): Promise<void> {
   // Validation
   app.useGlobalPipes(new ValidationPipe());
 
-  const configService = app.get(ConfigService);
-  const nestConfig = configService.get<NestConfig>('nest');
-  const corsConfig = configService.get<CorsConfig>('cors');
-  const swaggerConfig = configService.get<SwaggerConfig>('swagger');
+  app.enableCors();
 
-  // Swagger Api
-  if (swaggerConfig.enabled) {
-    const options = new DocumentBuilder()
-      .setTitle(swaggerConfig.title || 'Tele-backend')
-      .setDescription(
-        swaggerConfig.description || 'Tele-backend'
-      )
-      .setVersion(swaggerConfig.version || '1.0')
-      .build();
-    const document = SwaggerModule.createDocument(app, options);
-
-    SwaggerModule.setup(swaggerConfig.path || 'api', app, document);
-  }
-
-  // Cors
-  if (corsConfig.enabled) {
-    app.enableCors();
-  }
-
-  await app.listen(process.env.PORT || nestConfig.port || 4444);
+  await app.listen(process.env.PORT || 4444);
 }
 
 bootstrap().catch(err => {
